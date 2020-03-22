@@ -27,6 +27,10 @@ export class MoviesService {
 
   }
 
+  getPopularMovies(): Observable<MovieDbResponse> {
+    return this.executeQuery<MovieDbResponse>('/discover/movie?sort_by=popularity.desc');
+  }
+
   private executeQuery<T>(query: string): Observable<T> {
     return this.http.get<T>(`${environment.url}${query}&api_key=${environment.apiKey}&language=es&include_image_language=es`);
   }

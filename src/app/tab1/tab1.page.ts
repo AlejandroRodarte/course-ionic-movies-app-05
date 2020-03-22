@@ -10,6 +10,7 @@ import { Movie, MovieDbResponse } from '../interfaces/interfaces';
 export class Tab1Page implements OnInit {
 
   public featuredMovies: Movie[] = [];
+  public popularMovies: Movie[] = [];
 
   constructor(
     private movieService: MoviesService
@@ -17,6 +18,7 @@ export class Tab1Page implements OnInit {
 
   ngOnInit() {
     this.movieService.getFeaturedMovies().subscribe((response: MovieDbResponse) => this.featuredMovies = response.results);
+    this.movieService.getPopularMovies().subscribe((response: MovieDbResponse) => this.popularMovies = response.results);
   }
 
 }
