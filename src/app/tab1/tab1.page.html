@@ -46,6 +46,10 @@
 
   </ion-grid>
 
-  <app-slideshow-pairs [movies]="popularMovies"></app-slideshow-pairs>
+  <app-slideshow-pairs 
+    [movies]="popularMovies"
+    (loadMoreMovies)="onLoadMoreMovies()"
+  >
+  </app-slideshow-pairs>
 
 </ion-content>

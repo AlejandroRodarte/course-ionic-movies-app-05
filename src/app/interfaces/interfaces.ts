@@ -21,3 +21,13 @@ export interface Movie {
   overview: string;
   release_date: string;
 }
+
+export interface PagesTracker {
+  [key: string]: PageTracker;
+}
+
+export interface PageTracker {
+  page: number;
+  totalPages: number;
+  onLastPage: boolean;
+}

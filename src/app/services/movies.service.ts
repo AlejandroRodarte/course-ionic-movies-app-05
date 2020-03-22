@@ -1,13 +1,34 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { MovieDbResponse } from '../interfaces/interfaces';
+import { MovieDbResponse, PagesTracker } from '../interfaces/interfaces';
 import { Observable } from 'rxjs';
 import { environment } from './../../environments/environment';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MoviesService {
+
+  public pageTracker: PagesTracker = {
+    popular: {
+      page: 1,
+      totalPages: 1,
+      onLastPage: false
+    }
+  };
+
+  private updatePagingStatus = (section: keyof PagesTracker) => (response: MovieDbResponse) => {
+
+    this.pageTracker[section].totalPages = response.total_pages;
+
+    if (response.page === response.total_pages) {
+      this.pageTracker[section].onLastPage = true;
+    } else {
+      this.pageTracker[section].page = response.page + 1;
+    }
+
+  }
 
   constructor(
     private http: HttpClient
@@ -28,7 +49,9 @@ export class MoviesService {
   }
 
   getPopularMovies(): Observable<MovieDbResponse> {
-    return this.executeQuery<MovieDbResponse>('/discover/movie?sort_by=popularity.desc');
+    return this
+            .executeQuery<MovieDbResponse>(`/discover/movie?sort_by=popularity.desc&page=${this.pageTracker.popular.page}`)
+            .pipe(tap(this.updatePagingStatus('popular')));
   }
 
   private executeQuery<T>(query: string): Observable<T> {

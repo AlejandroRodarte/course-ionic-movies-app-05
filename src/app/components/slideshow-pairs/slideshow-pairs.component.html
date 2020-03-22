@@ -22,4 +22,26 @@
 
   </ion-slide>
 
+  <ion-slide 
+    class="slide-more"
+    *ngIf="!disableNextPageButton"
+  >
+
+    <ion-button
+      expand="block"
+      size="large"
+      (click)="onClick()"
+      class="btn-more"
+    >
+
+      <ion-icon
+        name="add"
+        slot="icon-only"
+      >
+      </ion-icon>
+
+    </ion-button>
+
+  </ion-slide>
+
 </ion-slides>
