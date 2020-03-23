@@ -7,6 +7,23 @@ import { Component } from '@angular/core';
 })
 export class Tab2Page {
 
+  public searchText = '';
+
+  public ideas = [
+    'Spiderman',
+    'Avengers',
+    'El señor de los anillos',
+    'La vida es bella'
+  ];
+
   constructor() {}
+
+  searchMovies(e: CustomEvent): void {
+    const searchText = e.detail.value;
+  }
+
+  selectIdea(idea: string): void {
+    this.searchText = idea;
+  }
 
 }
