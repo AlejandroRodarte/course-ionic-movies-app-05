@@ -21,6 +21,8 @@ export class DetailComponent implements OnInit {
 
   public trim = false;
 
+  public selectedAsFavorite = false;
+
   public slidePosterOpts = {
     slidesPerView: 3.3,
     freeMode: true,
@@ -37,6 +39,8 @@ export class DetailComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
+    this.selectedAsFavorite = this.datalocalService.movieExists(this.id);
 
     this
       .movieService
@@ -57,8 +61,12 @@ export class DetailComponent implements OnInit {
   }
 
   async favorite(): Promise<void> {
-    const message = this.datalocalService.saveMovie(this.movieDetails);
+
+    const message = await this.datalocalService.saveMovie(this.movieDetails);
     await this.presentToast(message);
+
+    this.selectedAsFavorite = !this.selectedAsFavorite;
+
   }
 
   private async presentToast(message: string): Promise<void> {

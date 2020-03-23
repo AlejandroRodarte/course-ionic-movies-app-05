@@ -13,7 +13,7 @@ export class DataLocalService {
     private storage: Storage
   ) { }
 
-  saveMovie(movieDetails: MovieDetails): string {
+  async saveMovie(movieDetails: MovieDetails): Promise<string> {
 
     const index = this.movieDetailsArr.findIndex((details: MovieDetails) => details.id === movieDetails.id);
     let message: string;
@@ -26,10 +26,19 @@ export class DataLocalService {
       message = 'Movie deleted from favorites';
     }
 
-    this.storage.set('movies', this.movieDetailsArr);
+    await this.storage.set('movies', this.movieDetailsArr);
 
     return message;
 
+  }
+
+  async loadMovies(): Promise<void> {
+    const movieDetailsArr = await this.storage.get('movies') || [];
+    this.movieDetailsArr = movieDetailsArr;
+  }
+
+  movieExists(id: number): boolean {
+    return this.movieDetailsArr.findIndex((movie: MovieDetails) => movie.id === id) !== -1;
   }
 
 }
