@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { MovieDetails } from '../interfaces/interfaces';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,9 +10,15 @@ export class DataLocalService {
 
   private movieDetailsArr: MovieDetails[] = [];
 
+  public moviesChanged = new Subject<void>();
+
   constructor(
     private storage: Storage
   ) { }
+
+  getMovies(): MovieDetails[] {
+    return this.movieDetailsArr.slice();
+  }
 
   async saveMovie(movieDetails: MovieDetails): Promise<string> {
 
@@ -27,14 +34,19 @@ export class DataLocalService {
     }
 
     await this.storage.set('movies', this.movieDetailsArr);
+    this.moviesChanged.next();
 
     return message;
 
   }
 
   async loadMovies(): Promise<void> {
+
     const movieDetailsArr = await this.storage.get('movies') || [];
     this.movieDetailsArr = movieDetailsArr;
+
+    this.moviesChanged.next();
+
   }
 
   movieExists(id: number): boolean {

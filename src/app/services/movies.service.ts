@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { MovieDbResponse, PagesTracker, MovieDetails, MovieActors } from '../interfaces/interfaces';
-import { Observable } from 'rxjs';
+import { MovieDbResponse, PagesTracker, MovieDetails, MovieActors, GenreResponse, Genre } from '../interfaces/interfaces';
+import { Observable, Subject } from 'rxjs';
 import { environment } from './../../environments/environment';
 import { tap } from 'rxjs/operators';
 
@@ -17,6 +17,10 @@ export class MoviesService {
       onLastPage: false
     }
   };
+
+  private genres: Genre[] = [];
+
+  public genresChanged = new Subject<void>();
 
   private updatePagingStatus = (section: keyof PagesTracker) => (response: MovieDbResponse) => {
 
@@ -64,6 +68,23 @@ export class MoviesService {
 
   getSearchedMovies(searchText: string): Observable<MovieDbResponse> {
     return this.executeQuery<MovieDbResponse>(`/search/movie?query=${searchText}`);
+  }
+
+  getGenres(): Observable<GenreResponse> {
+    return this
+            .executeQuery<GenreResponse>(`/genre/movie/list?dummy=value`)
+            .pipe(
+              tap(
+                (response: GenreResponse) => {
+                  this.genres = response.genres;
+                  this.genresChanged.next();
+                }
+              )
+            );
+  }
+
+  fetchGenres(): Genre[] {
+    return this.genres.slice();
   }
 
   private executeQuery<T>(query: string): Observable<T> {

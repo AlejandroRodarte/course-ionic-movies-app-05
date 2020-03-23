@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DataLocalService } from '../services/data-local.service';
+import { MoviesService } from '../services/movies.service';
 
 @Component({
   selector: 'app-tabs',
@@ -9,11 +10,13 @@ import { DataLocalService } from '../services/data-local.service';
 export class TabsPage implements OnInit {
 
   constructor(
-    private dataLocalService: DataLocalService
+    private dataLocalService: DataLocalService,
+    private movieService: MoviesService
   ) {}
 
   async ngOnInit() {
     await this.dataLocalService.loadMovies();
+    this.movieService.getGenres().subscribe();
   }
 
 }
