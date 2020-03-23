@@ -3,6 +3,7 @@ import { MoviesService } from '../../services/movies.service';
 import { MovieDetails, MovieActors, Cast } from '../../interfaces/interfaces';
 import { tap } from 'rxjs/operators';
 import { ModalController } from '@ionic/angular';
+import { DataLocalService } from '../../services/data-local.service';
 
 @Component({
   selector: 'app-detail',
@@ -30,7 +31,8 @@ export class DetailComponent implements OnInit {
 
   constructor(
     private movieService: MoviesService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private datalocalService: DataLocalService
   ) { }
 
   ngOnInit() {
@@ -54,7 +56,7 @@ export class DetailComponent implements OnInit {
   }
 
   favorite(): void {
-    console.log('favorite');
+    this.datalocalService.saveMovie(this.movieDetails);
   }
 
 }
