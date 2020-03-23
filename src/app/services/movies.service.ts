@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { MovieDbResponse, PagesTracker } from '../interfaces/interfaces';
+import { MovieDbResponse, PagesTracker, MovieDetails, MovieActors } from '../interfaces/interfaces';
 import { Observable } from 'rxjs';
 import { environment } from './../../environments/environment';
 import { tap } from 'rxjs/operators';
@@ -52,6 +52,14 @@ export class MoviesService {
     return this
             .executeQuery<MovieDbResponse>(`/discover/movie?sort_by=popularity.desc&page=${this.pageTracker.popular.page}`)
             .pipe(tap(this.updatePagingStatus('popular')));
+  }
+
+  getMovieDetails(id: number): Observable<MovieDetails> {
+    return this.executeQuery<MovieDetails>(`/movie/${id}?dummy=value`);
+  }
+
+  getMovieActors(id: number): Observable<MovieActors> {
+    return this.executeQuery<MovieActors>(`/movie/${id}/credits?dummy=value`);
   }
 
   private executeQuery<T>(query: string): Observable<T> {
