@@ -112,3 +112,8 @@ export interface Cast {
 export interface GenreResponse {
   genres: Genre[];
 }
+
+export interface MovieByGenre {
+  genre: string;
+  movies: MovieDetails[];
+}

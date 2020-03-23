@@ -10,23 +10,19 @@
     </ion-row>
   </ion-grid>
 
-  <div *ngFor="let genre of genres">
+  <div *ngFor="let moviesAndGenre of moviesByGenre">
 
-    <div *ngIf="(movieDetails | count:'genres':genre.id) > 0">
+    <ion-grid *ngIf="moviesAndGenre.movies.length > 0">
+      <ion-row>
+        <ion-col>
+          <h4>
+            {{ moviesAndGenre.genre }}
+          </h4>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
 
-      <ion-grid>
-        <ion-row>
-          <ion-col>
-            <h4>
-              {{ genre.name }}
-            </h4>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-  
-      <app-slideshow-poster [movies]="movieDetails | filter:'genres':genre.id"></app-slideshow-poster>
-
-    </div>
+    <app-slideshow-poster [movies]="moviesAndGenre.movies"></app-slideshow-poster>
 
   </div>
 
