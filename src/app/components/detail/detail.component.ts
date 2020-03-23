@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MoviesService } from '../../services/movies.service';
-import { MovieDetails, MovieActors } from '../../interfaces/interfaces';
+import { MovieDetails, MovieActors, Cast } from '../../interfaces/interfaces';
+import { tap } from 'rxjs/operators';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-detail',
@@ -14,15 +16,45 @@ export class DetailComponent implements OnInit {
 
   public movieDetails: MovieDetails;
 
-  public movieActors: MovieActors;
+  public movieCast: Cast[] = [];
+
+  public trim = false;
+
+  public slidePosterOpts = {
+    slidesPerView: 3.3,
+    freeMode: true,
+    spaceBetween: -5
+  };
+
+  private trimThreshold = 150;
 
   constructor(
-    private movieService: MoviesService
+    private movieService: MoviesService,
+    private modalController: ModalController
   ) { }
 
   ngOnInit() {
-    this.movieService.getMovieDetails(this.id).subscribe((movieDetails: MovieDetails) => this.movieDetails = movieDetails);
-    this.movieService.getMovieActors(this.id).subscribe((movieActors: MovieActors) => this.movieActors = movieActors);
+
+    this
+      .movieService
+      .getMovieDetails(this.id)
+      .pipe(
+        tap(
+          (movieDetails: MovieDetails) => this.trim = movieDetails.overview.length > this.trimThreshold
+        )
+      )
+      .subscribe((movieDetails: MovieDetails) => this.movieDetails = movieDetails);
+
+    this.movieService.getMovieActors(this.id).subscribe((movieActors: MovieActors) => this.movieCast = movieActors.cast);
+
+  }
+
+  back(): void {
+    this.modalController.dismiss();
+  }
+
+  favorite(): void {
+    console.log('favorite');
   }
 
 }
