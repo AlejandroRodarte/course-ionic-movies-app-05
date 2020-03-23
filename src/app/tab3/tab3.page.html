@@ -12,17 +12,21 @@
 
   <div *ngFor="let genre of genres">
 
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <h4>
-            {{ genre.name }}
-          </h4>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+    <div *ngIf="(movieDetails | count:'genres':genre.id) > 0">
 
-    <app-slideshow-poster [movies]="movieDetails"></app-slideshow-poster>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <h4>
+              {{ genre.name }}
+            </h4>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+  
+      <app-slideshow-poster [movies]="movieDetails | filter:'genres':genre.id"></app-slideshow-poster>
+
+    </div>
 
   </div>
 
