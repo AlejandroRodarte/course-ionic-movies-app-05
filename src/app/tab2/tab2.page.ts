@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
 import { MoviesService } from '../services/movies.service';
+import { Movie, MovieDbResponse } from '../interfaces/interfaces';
+import { tap } from 'rxjs/operators';
+import { ModalController } from '@ionic/angular';
+import { DetailComponent } from '../components/detail/detail.component';
 
 @Component({
   selector: 'app-tab2',
@@ -10,6 +14,10 @@ export class Tab2Page {
 
   public searchText = '';
 
+  public loading = false;
+
+  public movies: Movie[] = [];
+
   public ideas = [
     'Spiderman',
     'Avengers',
@@ -18,16 +26,50 @@ export class Tab2Page {
   ];
 
   constructor(
-    private movieService: MoviesService
+    private movieService: MoviesService,
+    private modalController: ModalController
   ) {}
 
   searchMovies(e: CustomEvent): void {
+
     const searchText = e.detail.value;
-    this.movieService.getSearchedMovies(searchText).subscribe(console.log);
+
+    if (searchText) {
+
+      this.loading = true;
+
+      this
+        .movieService
+        .getSearchedMovies(searchText)
+        .pipe(
+          tap(
+            (response: MovieDbResponse) => {
+              this.movies = response.results;
+              this.loading = false;
+            }
+          )
+        )
+        .subscribe(console.log);
+
+    } else {
+      this.movies = [];
+    }
+
   }
 
   selectIdea(idea: string): void {
     this.searchText = idea;
+  }
+
+  async showMovieDetails(id: number): Promise<void> {
+
+    const modal = await this.modalController.create({
+      component: DetailComponent,
+      componentProps: { id }
+    });
+
+    await modal.present();
+
   }
 
 }
