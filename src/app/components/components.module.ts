@@ -5,6 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { PipesModule } from '../pipes/pipes.module';
 import { SlideshowPosterComponent } from './slideshow-poster/slideshow-poster.component';
 import { SlideshowPairsComponent } from './slideshow-pairs/slideshow-pairs.component';
+import { DetailComponent } from './detail/detail.component';
 
 
 
@@ -12,7 +13,8 @@ import { SlideshowPairsComponent } from './slideshow-pairs/slideshow-pairs.compo
   declarations: [
     SlideshowBackdropComponent,
     SlideshowPosterComponent,
-    SlideshowPairsComponent
+    SlideshowPairsComponent,
+    DetailComponent
   ],
   imports: [
     CommonModule,
@@ -22,7 +24,11 @@ import { SlideshowPairsComponent } from './slideshow-pairs/slideshow-pairs.compo
   exports: [
     SlideshowBackdropComponent,
     SlideshowPosterComponent,
-    SlideshowPairsComponent
+    SlideshowPairsComponent,
+    DetailComponent
+  ],
+  entryComponents: [
+    DetailComponent
   ]
 })
 export class ComponentsModule { }
