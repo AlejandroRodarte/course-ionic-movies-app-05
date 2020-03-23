@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { MoviesService } from '../../services/movies.service';
 import { MovieDetails, MovieActors, Cast } from '../../interfaces/interfaces';
 import { tap } from 'rxjs/operators';
-import { ModalController } from '@ionic/angular';
+import { ModalController, ToastController } from '@ionic/angular';
 import { DataLocalService } from '../../services/data-local.service';
 
 @Component({
@@ -32,7 +32,8 @@ export class DetailComponent implements OnInit {
   constructor(
     private movieService: MoviesService,
     private modalController: ModalController,
-    private datalocalService: DataLocalService
+    private datalocalService: DataLocalService,
+    private toastController: ToastController
   ) { }
 
   ngOnInit() {
@@ -55,8 +56,20 @@ export class DetailComponent implements OnInit {
     this.modalController.dismiss();
   }
 
-  favorite(): void {
-    this.datalocalService.saveMovie(this.movieDetails);
+  async favorite(): Promise<void> {
+    const message = this.datalocalService.saveMovie(this.movieDetails);
+    await this.presentToast(message);
+  }
+
+  private async presentToast(message: string): Promise<void> {
+
+    const toast = await this.toastController.create({
+      message,
+      duration: 1500
+    });
+
+    await toast.present();
+
   }
 
 }
