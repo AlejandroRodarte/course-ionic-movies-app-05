@@ -62,6 +62,10 @@ export class MoviesService {
     return this.executeQuery<MovieActors>(`/movie/${id}/credits?dummy=value`);
   }
 
+  getSearchedMovies(searchText: string): Observable<MovieDbResponse> {
+    return this.executeQuery<MovieDbResponse>(`/search/movie?query=${searchText}`);
+  }
+
   private executeQuery<T>(query: string): Observable<T> {
     return this.http.get<T>(`${environment.url}${query}&api_key=${environment.apiKey}&language=es&include_image_language=es`);
   }
